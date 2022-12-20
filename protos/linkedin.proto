@@ -6,15 +6,16 @@ package petproject;
 
 service LinkedinDatabaseCrud {
     rpc Createpost(NewPost) returns (Post) {} 
-    rpc ConnectedUsers(User) returns (Users) {}
-    rpc AllCommentsOfPost(Post) returns (Comments) {}
-    rpc AllUsersWhoLikedspecificPost(Post) returns (Users) {}
-    rpc ConnectWithOtherUser(TwoUsers) returns (Emptyresponse) {}
-    rpc LikeOtherPosts(Post) returns (Emptyresponse) {}
-    rpc SearchForRequiredUserBasedOnTechStack(Technology) returns (Users) {}
-    //rpc AllRelatedJobs(Technology) returns () {}
-
+    rpc GetConnectedUsers(User) returns (Users) {}
+    rpc GetPostComments(Post) returns (Comments) {}
+    rpc GetPostLikes(Post) returns (Users) {}
+    rpc ConnectWithOtherUser(ConnectionRequest) returns (Emptyresponse) {}
+    rpc LikeOtherPost(Post) returns (Emptyresponse) {}
+    rpc SearchUser(SearchRequest) returns (Users) {}
+    rpc CreateComment(Comment) returns (Comment) {}
+    
 }
+
 
 message NewPost{
     string Text = 1;
@@ -40,20 +41,28 @@ message Comment {
     uint64 id = 1;
     string Text = 2;
     uint64 Commenterid = 3;
+    uint64 PostID = 4;
 }
 
 message Comments {
     repeated Comment allcomments = 1;
 }
+
 message Emptyresponse{
 }
-message TwoUsers {
+
+message ConnectionRequest {
     uint64 id1 = 1;
     uint64 id2 = 2;
 }
 
-message Technology{
-    string tech = 1;
+message SearchRequest{
+    enum TechStack {
+        cpp = 0;
+        java = 1;
+    
+    }
+    TechStack tech = 3;
 }
 
 

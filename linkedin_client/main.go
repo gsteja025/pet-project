@@ -43,35 +43,41 @@ func main() {
 	// 	fmt.Println(comm.GetText())
 	// }
 
-	likes, err3 := client.AllUsersWhoLikedspecificPost(ctx, &pb.Post{Id: 1, Text: "hello connections i've joined BC as dev intern", UserID: 1})
-	checkerror(err3)
-	log.Printf("These are likes of your posts")
-	for _, comm := range likes.Users {
-		fmt.Println(comm.GetId())
-	}
+	// likes, err3 := client.GetPostLikes(ctx, &pb.Post{Id: 1, Text: "hello connections i've joined BC as dev intern", UserID: 1})
+	// checkerror(err3)
+	// log.Printf("These are likes of your posts")
+	// for _, comm := range likes.Users {
+	// 	fmt.Println(comm.GetId())
+	// }
 
-	jobs, err4 := client.ConnectWithOtherUser(ctx, &pb.TwoUsers{
-		Id1: 2,
-		Id2: 1,
-	})
-	checkerror(err4)
-	fmt.Println(jobs)
+	// jobs, err4 := client.ConnectWithOtherUser(ctx, &pb.ConnectionRequest{
+	// 	Id1: 2,
+	// 	Id2: 1,
+	// })
+	// checkerror(err4)
+	// fmt.Println(jobs)
 
-	connected_users, err5 := client.ConnectedUsers(ctx, &pb.User{Id: 1, Name: "gst"})
-	checkerror(err5)
-	log.Printf("These are your connected users")
-	for _, user := range connected_users.Users {
-		fmt.Println(user.GetId())
-	}
+	// connected_users, err5 := client.GetConnectedUsers(ctx, &pb.User{Id: 1, Name: "gst"})
+	// checkerror(err5)
+	// log.Printf("These are your connected users")
+	// for _, user := range connected_users.Users {
+	// 	fmt.Println(user.GetId())
+	// }
 
-	like, err6 := client.LikeOtherPosts(ctx, &pb.Post{Id: 1, UserID: 2})
-	checkerror(err6)
-	fmt.Println(like)
+	// like, err6 := client.LikeOtherPost(ctx, &pb.Post{Id: 1, UserID: 2})
+	// checkerror(err6)
+	// fmt.Println(like)
 
-	us1, err7 := client.SearchForRequiredUserBasedOnTechStack(ctx, &pb.Technology{Tech: "cpp"})
+	us1, err7 := client.SearchUser(ctx, &pb.SearchRequest{Tech: *pb.SearchRequest_cpp.Enum().Enum()})
 	checkerror(err7)
-	log.Printf("These are your relevant searchs")
+	log.Printf("These are your relevant searches")
 	fmt.Println(us1)
+
+	// new_comment, err8 := client.CreateComment(ctx, &pb.Comment{Text: "Great news", Commenterid: 1, PostID: 1})
+	// checkerror(err8)
+
+	// log.Printf("Comment text: %v", new_comment.GetText())
+
 	//get details of all employees
 	// AllEmployees, err := client.GetEmployees(ctx, &pb.EmptyEmployee{})
 	// if err != nil {
