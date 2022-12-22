@@ -4,6 +4,7 @@ import (
 	"log"
 	"net"
 
+	database "example.com/petproject/database"
 	mod "example.com/petproject/models"
 	pb "example.com/petproject/protos"
 	ser "example.com/petproject/services"
@@ -33,9 +34,10 @@ func main() {
 	defer db.Close()
 
 	//create new server
+
 	new_server := grpc.NewServer()
 	pb.RegisterLinkedinDatabaseCrudServer(new_server, &ser.Linkedinserver{
-		Db: db,
+		Db: database.Dbclient{Db: db},
 	})
 
 	log.Printf("Using port no %v", listen.Addr())

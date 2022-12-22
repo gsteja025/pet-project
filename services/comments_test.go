@@ -17,7 +17,7 @@ func TestCreateComment(t *testing.T) {
 	defer mockcntrl.Finish()
 
 	mockProd := mocks.NewMockDbinterface(mockcntrl)
-	testProd := Server{Db: mockProd}
+	testProd := Linkedinserver{Db: mockProd}
 
 	//prod1 := model.Product{Name: "Asus Zenbook 11", Description: "This Laptop is with Intel i7 12th gen processor and it has 120hz High refresh rate", Quantity: 100, Price: 88000, Image: "lap.jpg"}
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)

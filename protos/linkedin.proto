@@ -10,7 +10,7 @@ service LinkedinDatabaseCrud {
     rpc GetPostComments(Post) returns (Comments) {}
     rpc GetPostLikes(Post) returns (Users) {}
     rpc ConnectWithOtherUser(ConnectionRequest) returns (Emptyresponse) {}
-    rpc LikeOtherPost(Post) returns (Emptyresponse) {}
+    rpc LikeOtherPost(Request) returns (Emptyresponse) {}
     rpc SearchUser(SearchRequest) returns (Users) {}
     rpc CreateComment(Comment) returns (Comment) {}
     
@@ -58,12 +58,16 @@ message ConnectionRequest {
 
 message SearchRequest{
     enum TechStack {
-        cpp = 0;
-        java = 1;
+        CPP = 0;
+        JAVA = 1;
     
     }
     TechStack tech = 3;
 }
 
+message Request {
+    uint64 PostID = 1;
+    uint64 LikerID = 2;
+}
 
 

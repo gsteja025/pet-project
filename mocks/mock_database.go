@@ -34,6 +34,49 @@ func (m *MockDbinterface) EXPECT() *MockDbinterfaceMockRecorder {
 	return m.recorder
 }
 
+// ConnectWithOtherUserDbinteraction1 mocks base method.
+func (m *MockDbinterface) ConnectWithOtherUserDbinteraction1(arg0 []models.User) (models.Connected, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ConnectWithOtherUserDbinteraction1", arg0)
+	ret0, _ := ret[0].(models.Connected)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ConnectWithOtherUserDbinteraction1 indicates an expected call of ConnectWithOtherUserDbinteraction1.
+func (mr *MockDbinterfaceMockRecorder) ConnectWithOtherUserDbinteraction1(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ConnectWithOtherUserDbinteraction1", reflect.TypeOf((*MockDbinterface)(nil).ConnectWithOtherUserDbinteraction1), arg0)
+}
+
+// ConnectWithOtherUserDbinteraction2 mocks base method.
+func (m *MockDbinterface) ConnectWithOtherUserDbinteraction2(arg0 []models.User) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ConnectWithOtherUserDbinteraction2", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// ConnectWithOtherUserDbinteraction2 indicates an expected call of ConnectWithOtherUserDbinteraction2.
+func (mr *MockDbinterfaceMockRecorder) ConnectWithOtherUserDbinteraction2(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ConnectWithOtherUserDbinteraction2", reflect.TypeOf((*MockDbinterface)(nil).ConnectWithOtherUserDbinteraction2), arg0)
+}
+
+// ConnectWithOtherUserDbinteraction3 mocks base method.
+func (m *MockDbinterface) ConnectWithOtherUserDbinteraction3(arg0 []models.User) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ConnectWithOtherUserDbinteraction3", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// ConnectWithOtherUserDbinteraction3 indicates an expected call of ConnectWithOtherUserDbinteraction3.
+func (mr *MockDbinterfaceMockRecorder) ConnectWithOtherUserDbinteraction3(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ConnectWithOtherUserDbinteraction3", reflect.TypeOf((*MockDbinterface)(nil).ConnectWithOtherUserDbinteraction3), arg0)
+}
+
 // CreateCommentDbInteraction mocks base method.
 func (m *MockDbinterface) CreateCommentDbInteraction(arg0 models.Comment) {
 	m.ctrl.T.Helper()
@@ -44,4 +87,93 @@ func (m *MockDbinterface) CreateCommentDbInteraction(arg0 models.Comment) {
 func (mr *MockDbinterfaceMockRecorder) CreateCommentDbInteraction(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateCommentDbInteraction", reflect.TypeOf((*MockDbinterface)(nil).CreateCommentDbInteraction), arg0)
+}
+
+// CreatepostDbInteraction mocks base method.
+func (m *MockDbinterface) CreatepostDbInteraction(arg0 models.Post) (models.Post, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreatepostDbInteraction", arg0)
+	ret0, _ := ret[0].(models.Post)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreatepostDbInteraction indicates an expected call of CreatepostDbInteraction.
+func (mr *MockDbinterfaceMockRecorder) CreatepostDbInteraction(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreatepostDbInteraction", reflect.TypeOf((*MockDbinterface)(nil).CreatepostDbInteraction), arg0)
+}
+
+// GetConnectedUsersDbInteraction mocks base method.
+func (m *MockDbinterface) GetConnectedUsersDbInteraction(arg0 models.Connected) ([]models.Connected, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetConnectedUsersDbInteraction", arg0)
+	ret0, _ := ret[0].([]models.Connected)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetConnectedUsersDbInteraction indicates an expected call of GetConnectedUsersDbInteraction.
+func (mr *MockDbinterfaceMockRecorder) GetConnectedUsersDbInteraction(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetConnectedUsersDbInteraction", reflect.TypeOf((*MockDbinterface)(nil).GetConnectedUsersDbInteraction), arg0)
+}
+
+// GetPostCommentsDbinteraction mocks base method.
+func (m *MockDbinterface) GetPostCommentsDbinteraction(arg0 models.Post) ([]models.Comment, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetPostCommentsDbinteraction", arg0)
+	ret0, _ := ret[0].([]models.Comment)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetPostCommentsDbinteraction indicates an expected call of GetPostCommentsDbinteraction.
+func (mr *MockDbinterfaceMockRecorder) GetPostCommentsDbinteraction(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPostCommentsDbinteraction", reflect.TypeOf((*MockDbinterface)(nil).GetPostCommentsDbinteraction), arg0)
+}
+
+// GetPostLikesDbinteraction mocks base method.
+func (m *MockDbinterface) GetPostLikesDbinteraction(arg0 models.Post) ([]models.Likes, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetPostLikesDbinteraction", arg0)
+	ret0, _ := ret[0].([]models.Likes)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetPostLikesDbinteraction indicates an expected call of GetPostLikesDbinteraction.
+func (mr *MockDbinterfaceMockRecorder) GetPostLikesDbinteraction(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPostLikesDbinteraction", reflect.TypeOf((*MockDbinterface)(nil).GetPostLikesDbinteraction), arg0)
+}
+
+// LikeOtherPostDbinteraction mocks base method.
+func (m *MockDbinterface) LikeOtherPostDbinteraction(arg0 models.Likes) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "LikeOtherPostDbinteraction", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// LikeOtherPostDbinteraction indicates an expected call of LikeOtherPostDbinteraction.
+func (mr *MockDbinterfaceMockRecorder) LikeOtherPostDbinteraction(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LikeOtherPostDbinteraction", reflect.TypeOf((*MockDbinterface)(nil).LikeOtherPostDbinteraction), arg0)
+}
+
+// SearchUserDbinteraction mocks base method.
+func (m *MockDbinterface) SearchUserDbinteraction(arg0 models.Skill) ([]models.Skill, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SearchUserDbinteraction", arg0)
+	ret0, _ := ret[0].([]models.Skill)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SearchUserDbinteraction indicates an expected call of SearchUserDbinteraction.
+func (mr *MockDbinterfaceMockRecorder) SearchUserDbinteraction(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchUserDbinteraction", reflect.TypeOf((*MockDbinterface)(nil).SearchUserDbinteraction), arg0)
 }

@@ -27,7 +27,7 @@ type LinkedinDatabaseCrudClient interface {
 	GetPostComments(ctx context.Context, in *Post, opts ...grpc.CallOption) (*Comments, error)
 	GetPostLikes(ctx context.Context, in *Post, opts ...grpc.CallOption) (*Users, error)
 	ConnectWithOtherUser(ctx context.Context, in *ConnectionRequest, opts ...grpc.CallOption) (*Emptyresponse, error)
-	LikeOtherPost(ctx context.Context, in *Post, opts ...grpc.CallOption) (*Emptyresponse, error)
+	LikeOtherPost(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Emptyresponse, error)
 	SearchUser(ctx context.Context, in *SearchRequest, opts ...grpc.CallOption) (*Users, error)
 	CreateComment(ctx context.Context, in *Comment, opts ...grpc.CallOption) (*Comment, error)
 }
@@ -85,7 +85,7 @@ func (c *linkedinDatabaseCrudClient) ConnectWithOtherUser(ctx context.Context, i
 	return out, nil
 }
 
-func (c *linkedinDatabaseCrudClient) LikeOtherPost(ctx context.Context, in *Post, opts ...grpc.CallOption) (*Emptyresponse, error) {
+func (c *linkedinDatabaseCrudClient) LikeOtherPost(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Emptyresponse, error) {
 	out := new(Emptyresponse)
 	err := c.cc.Invoke(ctx, "/petproject.LinkedinDatabaseCrud/LikeOtherPost", in, out, opts...)
 	if err != nil {
@@ -121,7 +121,7 @@ type LinkedinDatabaseCrudServer interface {
 	GetPostComments(context.Context, *Post) (*Comments, error)
 	GetPostLikes(context.Context, *Post) (*Users, error)
 	ConnectWithOtherUser(context.Context, *ConnectionRequest) (*Emptyresponse, error)
-	LikeOtherPost(context.Context, *Post) (*Emptyresponse, error)
+	LikeOtherPost(context.Context, *Request) (*Emptyresponse, error)
 	SearchUser(context.Context, *SearchRequest) (*Users, error)
 	CreateComment(context.Context, *Comment) (*Comment, error)
 	mustEmbedUnimplementedLinkedinDatabaseCrudServer()
@@ -146,7 +146,7 @@ func (UnimplementedLinkedinDatabaseCrudServer) GetPostLikes(context.Context, *Po
 func (UnimplementedLinkedinDatabaseCrudServer) ConnectWithOtherUser(context.Context, *ConnectionRequest) (*Emptyresponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ConnectWithOtherUser not implemented")
 }
-func (UnimplementedLinkedinDatabaseCrudServer) LikeOtherPost(context.Context, *Post) (*Emptyresponse, error) {
+func (UnimplementedLinkedinDatabaseCrudServer) LikeOtherPost(context.Context, *Request) (*Emptyresponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LikeOtherPost not implemented")
 }
 func (UnimplementedLinkedinDatabaseCrudServer) SearchUser(context.Context, *SearchRequest) (*Users, error) {
@@ -259,7 +259,7 @@ func _LinkedinDatabaseCrud_ConnectWithOtherUser_Handler(srv interface{}, ctx con
 }
 
 func _LinkedinDatabaseCrud_LikeOtherPost_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Post)
+	in := new(Request)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -271,7 +271,7 @@ func _LinkedinDatabaseCrud_LikeOtherPost_Handler(srv interface{}, ctx context.Co
 		FullMethod: "/petproject.LinkedinDatabaseCrud/LikeOtherPost",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(LinkedinDatabaseCrudServer).LikeOtherPost(ctx, req.(*Post))
+		return srv.(LinkedinDatabaseCrudServer).LikeOtherPost(ctx, req.(*Request))
 	}
 	return interceptor(ctx, in, info, handler)
 }

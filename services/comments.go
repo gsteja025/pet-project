@@ -4,17 +4,12 @@ import (
 	"context"
 	"log"
 
-	database "example.com/petproject/database"
 	mod "example.com/petproject/models"
 	pb "example.com/petproject/protos"
 	_ "github.com/lib/pq"
 )
 
-type Server struct {
-	Db database.Dbinterface
-}
-
-func (s Server) CreateComment(ctx context.Context, in *pb.Comment) (*pb.Comment, error) {
+func (s Linkedinserver) CreateComment(ctx context.Context, in *pb.Comment) (*pb.Comment, error) {
 	log.Printf("creating new Comment")
 	newcom := mod.Comment{
 		Text:        in.GetText(),
