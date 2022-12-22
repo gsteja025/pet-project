@@ -68,7 +68,7 @@ func main() {
 	// checkerror(err6)
 	// fmt.Println(like)
 
-	us1, err7 := client.SearchUser(ctx, &pb.SearchRequest{Tech: *pb.SearchRequest_cpp.Enum()})
+	us1, err7 := client.SearchUser(ctx, &pb.SearchRequest{Tech: *pb.SearchRequest_CPP.Enum()})
 	checkerror(err7)
 	log.Printf("These are your relevant searches")
 	fmt.Println(us1)
