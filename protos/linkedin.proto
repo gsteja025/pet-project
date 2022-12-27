@@ -26,7 +26,7 @@ message NewPost{
 message Post {
     uint64 id =  1;
     string Text = 2;
-    uint64 UserID = 3;
+    uint64 UserID =3 ;
 }
 
 message User {

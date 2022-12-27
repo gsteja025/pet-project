@@ -10,75 +10,76 @@ type Dbclient struct {
 }
 
 type Dbinterface interface {
-	CreateCommentDbInteraction(model.Comment)
+	CreateCommentDbInteraction(model.Comment) (model.Comment, error)
 	GetConnectedUsersDbInteraction(model.Connected) ([]model.Connected, error)
 	ConnectWithOtherUserDbinteraction1([]model.User) (model.Connected, error)
 	ConnectWithOtherUserDbinteraction2([]model.User) error
 	ConnectWithOtherUserDbinteraction3([]model.User) error
 	CreatepostDbInteraction(model.Post) (model.Post, error)
 	GetPostCommentsDbinteraction(model.Post) ([]model.Comment, error)
-	GetPostLikesDbinteraction(model.Post) ([]model.Likes, error)
-	LikeOtherPostDbinteraction(model.Likes) error
+	GetPostLikesDbinteraction(model.Post) ([]model.Like, error)
+	LikeOtherPostDbinteraction(model.Like) error
 	SearchUserDbinteraction(model.Skill) ([]model.Skill, error)
 }
 
-func (s Dbclient) CreateCommentDbInteraction(comm model.Comment) {
-	s.Db.Save(&comm)
+func (s Dbclient) CreateCommentDbInteraction(comm model.Comment) (model.Comment, error) {
+	Db := s.Db.Save(&comm)
+	return comm, Db.Error
 }
 
 func (s Dbclient) GetConnectedUsersDbInteraction(conn model.Connected) ([]model.Connected, error) {
 	//	s.Db.Where("user_1 = ?",conn.User_1).Find(&conn)
 	result := []model.Connected{}
-	s.Db.Where("user_1 = ?", conn.User_1).Find(&result)
-	return result, nil
+	Db := s.Db.Where("user_1 = ?", conn.User_1).Find(&result)
+	return result, Db.Error
 }
 func (s Dbclient) ConnectWithOtherUserDbinteraction1(user []model.User) (model.Connected, error) {
 	var conn model.Connected
-	s.Db.Where("user_1 = ? and user_2 = ?", user[1].ID, user[0].ID).Find(&conn)
-	return conn, nil
+	Db := s.Db.Where("user_1 = ? and user_2 = ?", user[1].ID, user[0].ID).Find(&conn)
+	return conn, Db.Error
 }
 
 func (s Dbclient) ConnectWithOtherUserDbinteraction2(user []model.User) error {
 
-	s.Db.Save(&model.Connected{User_1: uint(user[1].ID), User_2: uint(user[0].ID), Status: "Connected"})
-	return nil
+	Db := s.Db.Save(&model.Connected{User_1: uint(user[1].ID), User_2: uint(user[0].ID), Status: "Connected"})
+	return Db.Error
 
 }
 
 func (s Dbclient) ConnectWithOtherUserDbinteraction3(user []model.User) error {
 
-	s.Db.Save(&model.Connected{User_1: uint(user[0].ID), User_2: uint(user[1].ID), Status: "Pending"})
-	return nil
+	Db := s.Db.Save(&model.Connected{User_1: uint(user[0].ID), User_2: uint(user[1].ID), Status: "Pending"})
+	return Db.Error
 }
 
 func (s Dbclient) CreatepostDbInteraction(post model.Post) (model.Post, error) {
 
-	s.Db.Save(&post)
-	return post, nil
+	Db := s.Db.Save(&post)
+	return post, Db.Error
 }
 
 func (s Dbclient) GetPostCommentsDbinteraction(post model.Post) ([]model.Comment, error) {
 	allcommen := []model.Comment{}
-	s.Db.Where("post_id = ?", post.ID).Find(&allcommen)
-	return allcommen, nil
+	Db := s.Db.Where("post_id = ?", post.ID).Find(&allcommen)
+	return allcommen, Db.Error
 }
 
-func (s Dbclient) GetPostLikesDbinteraction(post model.Post) ([]model.Likes, error) {
+func (s Dbclient) GetPostLikesDbinteraction(post model.Post) ([]model.Like, error) {
 
-	allLikes := []model.Likes{}
-	s.Db.Where("post_id = ?", post.ID).Find(&allLikes)
-	return allLikes, nil
+	allLikes := []model.Like{}
+	Db := s.Db.Where("post_id = ?", post.ID).Find(&allLikes)
+	return allLikes, Db.Error
 }
 
-func (s Dbclient) LikeOtherPostDbinteraction(likes model.Likes) error {
-	s.Db.Save(&likes)
-	return nil
+func (s Dbclient) LikeOtherPostDbinteraction(likes model.Like) error {
+	Db := s.Db.Save(&likes)
+	return Db.Error
 }
 
 func (s Dbclient) SearchUserDbinteraction(skill model.Skill) ([]model.Skill, error) {
 
 	Allskills := []model.Skill{}
 
-	s.Db.Where(&skill).Find(&Allskills)
-	return Allskills, nil
+	Db := s.Db.Where(&skill).Find(&Allskills)
+	return Allskills, Db.Error
 }

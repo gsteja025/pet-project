@@ -22,10 +22,10 @@ func (s *Linkedinserver) Createpost(ctx context.Context, in *pb.NewPost) (*pb.Po
 	log.Printf("creating new post called")
 	newpos := ser.Post{
 		Text:   in.GetText(),
-		UserID: 1,
+		UserID: uint(in.UserID),
 	}
-	s.Db.CreatepostDbInteraction(newpos)
-	return &pb.Post{Text: in.GetText(), UserID: in.GetUserID()}, nil
+	ans, err := s.Db.CreatepostDbInteraction(newpos)
+	return &pb.Post{Id: uint64(ans.ID)}, err
 }
 
 func (s *Linkedinserver) GetPostComments(in *pb.Post, stream pb.LinkedinDatabaseCrud_GetPostCommentsServer) error {
@@ -64,7 +64,7 @@ func (s *Linkedinserver) GetPostComments(in *pb.Post, stream pb.LinkedinDatabase
 
 func (s *Linkedinserver) GetPostLikes(ctx context.Context, in *pb.Post) (*pb.Users, error) {
 	log.Printf("Getting likes of post")
-	allLikes := []ser.Likes{}
+	allLikes := []ser.Like{}
 	FinalLikes := []*pb.User{}
 	post := ser.Post{}
 	post.ID = uint(in.GetId())
@@ -79,7 +79,7 @@ func (s *Linkedinserver) GetPostLikes(ctx context.Context, in *pb.Post) (*pb.Use
 }
 
 func (s *Linkedinserver) LikeOtherPost(ctx context.Context, in *pb.Request) (*pb.Emptyresponse, error) {
-	posts := ser.Likes{
+	posts := ser.Like{
 		PostID:  uint(in.GetPostID()),
 		LikerId: uint(in.LikerID),
 	}

@@ -14,7 +14,6 @@ import (
 func (s Linkedinserver) GetConnectedUsers(ctx context.Context, in *pb.User) (*pb.Users, error) {
 	log.Printf("Connected users")
 	connects := []ser.Connected{}
-	connects1 := []ser.Connected{}
 	Finalconnects := []*pb.User{}
 	// str1 := "Connected"
 	connects, err := s.Db.GetConnectedUsersDbInteraction(ser.Connected{User_1: uint(in.GetId())})
@@ -23,12 +22,13 @@ func (s Linkedinserver) GetConnectedUsers(ctx context.Context, in *pb.User) (*pb
 		panic(err.Error())
 	}
 	for _, conn := range connects {
-		Finalconnects = append(Finalconnects, &pb.User{Id: uint64(conn.User_2)})
+		if conn.User_1 == uint(in.GetId()) {
+			Finalconnects = append(Finalconnects, &pb.User{Id: uint64(conn.User_2)})
+		} else {
+			Finalconnects = append(Finalconnects, &pb.User{Id: uint64(conn.User_1)})
+		}
 	}
 
-	for _, conn := range connects1 {
-		Finalconnects = append(Finalconnects, &pb.User{Id: uint64(conn.User_1)})
-	}
 	return &pb.Users{Users: Finalconnects}, nil
 
 }
@@ -54,6 +54,8 @@ func (s *Linkedinserver) ConnectWithOtherUser(ctx context.Context, in *pb.Connec
 	if !reflect.DeepEqual(conn, conn1) && conn.Status == "pending" {
 		s.Db.ConnectWithOtherUserDbinteraction2(Userslice)
 		Email.SendEmail(usermodel.Email)
+
+	} else if !reflect.DeepEqual(conn, conn1) && conn.Status == "Connected" {
 
 	} else {
 		s.Db.ConnectWithOtherUserDbinteraction3(Userslice)

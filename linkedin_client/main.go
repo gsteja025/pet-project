@@ -43,7 +43,7 @@ func main() {
 	// 	fmt.Println(comm.GetText())
 	// }
 
-	likes, err3 := client.GetPostLikes(ctx, &pb.Post{Id: 1, Text: "hello connections i've joined BC as dev intern", UserID: 1})
+	likes, err3 := client.GetPostLikes(ctx, &pb.Post{Id: 1})
 	checkerror(err3)
 	log.Printf("These are likes of your posts")
 	for _, comm := range likes.Users {

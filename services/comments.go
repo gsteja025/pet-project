@@ -16,6 +16,6 @@ func (s Linkedinserver) CreateComment(ctx context.Context, in *pb.Comment) (*pb.
 		CommenterId: uint(in.GetCommenterid()),
 		PostID:      uint(in.GetPostID()),
 	}
-	s.Db.CreateCommentDbInteraction(newcom)
-	return &pb.Comment{Id: uint64(newcom.CommentID), Text: in.GetText(), Commenterid: in.GetCommenterid()}, nil
+	comment, err := s.Db.CreateCommentDbInteraction(newcom)
+	return &pb.Comment{Id: uint64(comment.ID), Text: comment.Text, Commenterid: uint64(comment.CommenterId)}, err
 }
