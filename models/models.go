@@ -1,9 +1,12 @@
 package models
 
 import (
+	"fmt"
+	"os"
 	"time"
 
 	"github.com/jinzhu/gorm"
+	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
 
@@ -63,7 +66,17 @@ type Connected struct {
 
 func StartDB() {
 
-	db, err := gorm.Open("postgres", "user=postgres password=root dbname=postgres sslmode=disable")
+	envErr := godotenv.Load(".env")
+	//fmt.Println(envErr)
+	if envErr != nil {
+		fmt.Printf("Could not load .env file")
+		os.Exit(1)
+	}
+	db_user := os.Getenv("db_user")
+	db_password := os.Getenv("db_password")
+	db_name := os.Getenv("db_name")
+	conn1 := "user=" + db_user + " password=" + db_password + " dbname=" + db_name + " sslmode=disable"
+	db, err := gorm.Open("postgres", conn1)
 	if err != nil {
 		panic(err.Error())
 	}

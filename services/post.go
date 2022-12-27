@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"sync"
+	"time"
 
 	"example.com/petproject/database"
 	ser "example.com/petproject/models"
@@ -26,9 +28,9 @@ func (s *Linkedinserver) Createpost(ctx context.Context, in *pb.NewPost) (*pb.Po
 	return &pb.Post{Text: in.GetText(), UserID: in.GetUserID()}, nil
 }
 
-func (s *Linkedinserver) GetPostComments(ctx context.Context, in *pb.Post) (*pb.Comments, error) {
+func (s *Linkedinserver) GetPostComments(in *pb.Post, stream pb.LinkedinDatabaseCrud_GetPostCommentsServer) error {
 	log.Printf("Getting comments of post")
-	Finalcomments := []*pb.Comment{}
+	// Finalcomments := []*pb.Comment{}
 	pos := ser.Post{}
 	pos.ID = uint(in.GetId())
 	comm, err := s.Db.GetPostCommentsDbinteraction(pos)
@@ -36,13 +38,28 @@ func (s *Linkedinserver) GetPostComments(ctx context.Context, in *pb.Post) (*pb.
 	if err != nil {
 		fmt.Printf("Thers an error")
 	}
-
+	var wg sync.WaitGroup
 	// s.Db.Where("post_id = ?", in.GetId()).Find(&allcommen)
 	for _, conn := range comm {
-		Finalcomments = append(Finalcomments, &pb.Comment{Id: uint64(conn.CommentID), Text: conn.Text, Commenterid: uint64(conn.CommenterId)})
-	}
+		wg.Add(1)
+		go func(conn ser.Comment) {
+			defer wg.Done()
+			time.Sleep(time.Duration(100) * time.Microsecond)
+			ele1 := pb.Comment{
+				Text:   conn.Text,
+				PostID: uint64(conn.PostID),
+			}
+			err := stream.Send(&ele1)
+			if err != nil {
+				fmt.Println("there is error in postcomments function")
+			}
+		}(conn)
 
-	return &pb.Comments{Allcomments: Finalcomments}, nil
+		//Finalcomments = append(Finalcomments, &pb.Comment{Id: uint64(conn.CommentID), Text: conn.Text, Commenterid: uint64(conn.CommenterId)})
+	}
+	wg.Wait()
+
+	return nil
 }
 
 func (s *Linkedinserver) GetPostLikes(ctx context.Context, in *pb.Post) (*pb.Users, error) {

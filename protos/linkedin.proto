@@ -7,7 +7,7 @@ package petproject;
 service LinkedinDatabaseCrud {
     rpc Createpost(NewPost) returns (Post) {} 
     rpc GetConnectedUsers(User) returns (Users) {}
-    rpc GetPostComments(Post) returns (Comments) {}
+    rpc GetPostComments(Post) returns (stream Comment) {}
     rpc GetPostLikes(Post) returns (Users) {}
     rpc ConnectWithOtherUser(ConnectionRequest) returns (Emptyresponse) {}
     rpc LikeOtherPost(Request) returns (Emptyresponse) {}
@@ -15,6 +15,7 @@ service LinkedinDatabaseCrud {
     rpc CreateComment(Comment) returns (Comment) {}
     
 }
+
 
 
 message NewPost{

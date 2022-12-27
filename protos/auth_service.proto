@@ -1,0 +1,21 @@
+
+syntax = "proto3";
+
+option go_package = "example.com/petproject";
+option java_multiple_files = true;
+package petproject;
+
+
+service AuthService {
+
+    rpc UserLogin(LoginRequest) returns (LoginResponse) {};
+}
+
+message LoginRequest {
+    string username = 1;
+    string password = 2;
+ }
+
+ message LoginResponse { 
+     string access_token = 1; 
+}

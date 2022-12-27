@@ -24,7 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 type LinkedinDatabaseCrudClient interface {
 	Createpost(ctx context.Context, in *NewPost, opts ...grpc.CallOption) (*Post, error)
 	GetConnectedUsers(ctx context.Context, in *User, opts ...grpc.CallOption) (*Users, error)
-	GetPostComments(ctx context.Context, in *Post, opts ...grpc.CallOption) (*Comments, error)
+	GetPostComments(ctx context.Context, in *Post, opts ...grpc.CallOption) (LinkedinDatabaseCrud_GetPostCommentsClient, error)
 	GetPostLikes(ctx context.Context, in *Post, opts ...grpc.CallOption) (*Users, error)
 	ConnectWithOtherUser(ctx context.Context, in *ConnectionRequest, opts ...grpc.CallOption) (*Emptyresponse, error)
 	LikeOtherPost(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Emptyresponse, error)
@@ -58,13 +58,36 @@ func (c *linkedinDatabaseCrudClient) GetConnectedUsers(ctx context.Context, in *
 	return out, nil
 }
 
-func (c *linkedinDatabaseCrudClient) GetPostComments(ctx context.Context, in *Post, opts ...grpc.CallOption) (*Comments, error) {
-	out := new(Comments)
-	err := c.cc.Invoke(ctx, "/petproject.LinkedinDatabaseCrud/GetPostComments", in, out, opts...)
+func (c *linkedinDatabaseCrudClient) GetPostComments(ctx context.Context, in *Post, opts ...grpc.CallOption) (LinkedinDatabaseCrud_GetPostCommentsClient, error) {
+	stream, err := c.cc.NewStream(ctx, &LinkedinDatabaseCrud_ServiceDesc.Streams[0], "/petproject.LinkedinDatabaseCrud/GetPostComments", opts...)
 	if err != nil {
 		return nil, err
 	}
-	return out, nil
+	x := &linkedinDatabaseCrudGetPostCommentsClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type LinkedinDatabaseCrud_GetPostCommentsClient interface {
+	Recv() (*Comment, error)
+	grpc.ClientStream
+}
+
+type linkedinDatabaseCrudGetPostCommentsClient struct {
+	grpc.ClientStream
+}
+
+func (x *linkedinDatabaseCrudGetPostCommentsClient) Recv() (*Comment, error) {
+	m := new(Comment)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
 }
 
 func (c *linkedinDatabaseCrudClient) GetPostLikes(ctx context.Context, in *Post, opts ...grpc.CallOption) (*Users, error) {
@@ -118,7 +141,7 @@ func (c *linkedinDatabaseCrudClient) CreateComment(ctx context.Context, in *Comm
 type LinkedinDatabaseCrudServer interface {
 	Createpost(context.Context, *NewPost) (*Post, error)
 	GetConnectedUsers(context.Context, *User) (*Users, error)
-	GetPostComments(context.Context, *Post) (*Comments, error)
+	GetPostComments(*Post, LinkedinDatabaseCrud_GetPostCommentsServer) error
 	GetPostLikes(context.Context, *Post) (*Users, error)
 	ConnectWithOtherUser(context.Context, *ConnectionRequest) (*Emptyresponse, error)
 	LikeOtherPost(context.Context, *Request) (*Emptyresponse, error)
@@ -137,8 +160,8 @@ func (UnimplementedLinkedinDatabaseCrudServer) Createpost(context.Context, *NewP
 func (UnimplementedLinkedinDatabaseCrudServer) GetConnectedUsers(context.Context, *User) (*Users, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetConnectedUsers not implemented")
 }
-func (UnimplementedLinkedinDatabaseCrudServer) GetPostComments(context.Context, *Post) (*Comments, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetPostComments not implemented")
+func (UnimplementedLinkedinDatabaseCrudServer) GetPostComments(*Post, LinkedinDatabaseCrud_GetPostCommentsServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetPostComments not implemented")
 }
 func (UnimplementedLinkedinDatabaseCrudServer) GetPostLikes(context.Context, *Post) (*Users, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPostLikes not implemented")
@@ -204,22 +227,25 @@ func _LinkedinDatabaseCrud_GetConnectedUsers_Handler(srv interface{}, ctx contex
 	return interceptor(ctx, in, info, handler)
 }
 
-func _LinkedinDatabaseCrud_GetPostComments_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Post)
-	if err := dec(in); err != nil {
-		return nil, err
+func _LinkedinDatabaseCrud_GetPostComments_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(Post)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
 	}
-	if interceptor == nil {
-		return srv.(LinkedinDatabaseCrudServer).GetPostComments(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/petproject.LinkedinDatabaseCrud/GetPostComments",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(LinkedinDatabaseCrudServer).GetPostComments(ctx, req.(*Post))
-	}
-	return interceptor(ctx, in, info, handler)
+	return srv.(LinkedinDatabaseCrudServer).GetPostComments(m, &linkedinDatabaseCrudGetPostCommentsServer{stream})
+}
+
+type LinkedinDatabaseCrud_GetPostCommentsServer interface {
+	Send(*Comment) error
+	grpc.ServerStream
+}
+
+type linkedinDatabaseCrudGetPostCommentsServer struct {
+	grpc.ServerStream
+}
+
+func (x *linkedinDatabaseCrudGetPostCommentsServer) Send(m *Comment) error {
+	return x.ServerStream.SendMsg(m)
 }
 
 func _LinkedinDatabaseCrud_GetPostLikes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -328,10 +354,6 @@ var LinkedinDatabaseCrud_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _LinkedinDatabaseCrud_GetConnectedUsers_Handler,
 		},
 		{
-			MethodName: "GetPostComments",
-			Handler:    _LinkedinDatabaseCrud_GetPostComments_Handler,
-		},
-		{
 			MethodName: "GetPostLikes",
 			Handler:    _LinkedinDatabaseCrud_GetPostLikes_Handler,
 		},
@@ -352,6 +374,12 @@ var LinkedinDatabaseCrud_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _LinkedinDatabaseCrud_CreateComment_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "GetPostComments",
+			Handler:       _LinkedinDatabaseCrud_GetPostComments_Handler,
+			ServerStreams: true,
+		},
+	},
 	Metadata: "linkedin.proto",
 }
