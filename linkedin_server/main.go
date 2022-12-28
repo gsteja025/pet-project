@@ -36,7 +36,6 @@ func main() {
 	//create new server
 
 	new_server := grpc.NewServer()
-
 	pb.RegisterLinkedinDatabaseCrudServer(new_server, &ser.Linkedinserver{
 		Db: database.Dbclient{Db: db},
 	})

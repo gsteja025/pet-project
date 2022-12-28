@@ -9,7 +9,7 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func (s Linkedinserver) CreateComment(ctx context.Context, in *pb.Comment) (*pb.Comment, error) {
+func (s Linkedinserver) CreateComment(ctx context.Context, in *pb.NewComment) (*pb.Comment, error) {
 	log.Printf("creating new Comment")
 	newcom := mod.Comment{
 		Text:        in.GetText(),

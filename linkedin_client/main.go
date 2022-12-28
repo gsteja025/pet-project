@@ -43,7 +43,7 @@ func main() {
 	// 	fmt.Println(comm.GetText())
 	// }
 
-	likes, err3 := client.GetPostLikes(ctx, &pb.Post{Id: 1})
+	likes, err3 := client.GetPostLikes(ctx, &pb.PostRequest{Id: 1})
 	checkerror(err3)
 	log.Printf("These are likes of your posts")
 	for _, comm := range likes.Users {
@@ -73,7 +73,7 @@ func main() {
 	log.Printf("These are your relevant searches")
 	fmt.Println(us1)
 
-	new_comment, err8 := client.CreateComment(ctx, &pb.Comment{Text: "Great news", Commenterid: 1, PostID: 1})
+	new_comment, err8 := client.CreateComment(ctx, &pb.NewComment{Text: "Great news", Commenterid: 1, PostID: 1})
 	checkerror(err8)
 
 	log.Printf("Comment text: %v", new_comment.GetText())

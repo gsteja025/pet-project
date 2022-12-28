@@ -33,7 +33,7 @@ func (s Linkedinserver) GetConnectedUsers(ctx context.Context, in *pb.User) (*pb
 
 }
 
-func (s *Linkedinserver) ConnectWithOtherUser(ctx context.Context, in *pb.ConnectionRequest) (*pb.Emptyresponse, error) {
+func (s *Linkedinserver) ConnectWithOtherUser(ctx context.Context, in *pb.ConnectionRequest) (*pb.ConnectionResponse, error) {
 	log.Printf("YOU NOW HAVE A NEW CONNECTION")
 	// var allconnectsids []uint64
 	// cnt := 0
@@ -51,14 +51,16 @@ func (s *Linkedinserver) ConnectWithOtherUser(ctx context.Context, in *pb.Connec
 	if err != nil {
 		panic(err.Error())
 	}
+	var message string = "pending"
 	if !reflect.DeepEqual(conn, conn1) && conn.Status == "pending" {
 		s.Db.ConnectWithOtherUserDbinteraction2(Userslice)
 		Email.SendEmail(usermodel.Email)
+		message = "Connected"
 
 	} else if !reflect.DeepEqual(conn, conn1) && conn.Status == "Connected" {
-
+		message = "Connected"
 	} else {
 		s.Db.ConnectWithOtherUserDbinteraction3(Userslice)
 	}
-	return &pb.Emptyresponse{}, nil
+	return &pb.ConnectionResponse{Message: message}, nil
 }

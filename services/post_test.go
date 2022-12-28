@@ -90,7 +90,7 @@ func TestGetPostComments(t *testing.T) {
 	}
 	mock.ExpectBegin()
 	mock.ExpectQuery(`SELECT * FROM "comments"  WHERE "comments"."post_id" = 1`).WillReturnRows(sqlmock.NewRows([]string{"comment_id", "text", "commenter_id", "post_id"}).AddRow(mockItem2.ID, mockItem2.Text, mockItem2.CommenterId, mockItem2.PostID))
-	req := pb.Post{
+	req := pb.PostRequest{
 		Id: 1,
 	}
 	stream_of_Items_Got, err := c.GetPostComments(ctx, &req)
@@ -180,7 +180,7 @@ func TestGetPostLikes(t *testing.T) {
 	iwantthis = append(iwantthis, &pb.User{Id: 2})
 	expected.Users = iwantthis
 
-	ans, err := testProd.GetPostLikes(ctx, &pb.Post{Id: 1})
+	ans, err := testProd.GetPostLikes(ctx, &pb.PostRequest{Id: 1})
 	//  var got = a
 	// fmt.Println(ans)
 	if err != nil {

@@ -31,6 +31,10 @@ func (s Dbclient) GetConnectedUsersDbInteraction(conn model.Connected) ([]model.
 	//	s.Db.Where("user_1 = ?",conn.User_1).Find(&conn)
 	result := []model.Connected{}
 	Db := s.Db.Where("user_1 = ?", conn.User_1).Find(&result)
+	Db1 := s.Db.Where("user_2 = ?", conn.User_1).Find(&result)
+	if Db1.Error != nil && Db.Error == nil {
+		Db.Error = Db1.Error
+	}
 	return result, Db.Error
 }
 func (s Dbclient) ConnectWithOtherUserDbinteraction1(user []model.User) (model.Connected, error) {
