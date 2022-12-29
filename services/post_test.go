@@ -34,7 +34,7 @@ const (
 
 var required2 = models.Post{Text: "GST", UserID: 1}
 var required3 = models.Comment{Text: "Congrats gst"}
-var required4 = models.Likes{LikerId: 2}
+var required4 = models.Like{LikerId: 2}
 
 func TestCreatepost(t *testing.T) {
 
@@ -50,7 +50,7 @@ func TestCreatepost(t *testing.T) {
 	mockProd.EXPECT().CreatepostDbInteraction(models.Post{Text: "GST", UserID: 1}).Return(required2, nil)
 
 	//rr := httptest.NewRecorder()
-	expected := &pb.Post{
+	expected := &pb.NewPost{
 		Text:   "GST",
 		UserID: 1,
 	}
@@ -84,13 +84,13 @@ func TestGetPostComments(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*3)
 	defer cancel()
 	mockItem2 := models.Comment{
-		CommentID:   1,
 		Text:        "Congrats gst",
 		CommenterId: 2,
 		PostID:      1,
 	}
-	mock.ExpectQuery(`SELECT * FROM "comments"  WHERE "comments"."post_id" = 1`).WillReturnRows(sqlmock.NewRows([]string{"comment_id", "text", "commenter_id", "post_id"}).AddRow(mockItem2.CommentID, mockItem2.Text, mockItem2.CommenterId, mockItem2.PostID))
-	req := pb.Post{
+	mock.ExpectBegin()
+	mock.ExpectQuery(`SELECT * FROM "comments"  WHERE "comments"."post_id" = 1`).WillReturnRows(sqlmock.NewRows([]string{"comment_id", "text", "commenter_id", "post_id"}).AddRow(mockItem2.ID, mockItem2.Text, mockItem2.CommenterId, mockItem2.PostID))
+	req := pb.PostRequest{
 		Id: 1,
 	}
 	stream_of_Items_Got, err := c.GetPostComments(ctx, &req)
@@ -172,7 +172,7 @@ func TestGetPostLikes(t *testing.T) {
 	defer cancel()
 	pos := ser.Post{}
 	pos.ID = 1
-	mockProd.EXPECT().GetPostLikesDbinteraction(pos).Return([]models.Likes{required4}, nil)
+	mockProd.EXPECT().GetPostLikesDbinteraction(pos).Return([]models.Like{required4}, nil)
 
 	//rr := httptest.NewRecorder()
 	expected := &pb.Users{}
@@ -180,7 +180,7 @@ func TestGetPostLikes(t *testing.T) {
 	iwantthis = append(iwantthis, &pb.User{Id: 2})
 	expected.Users = iwantthis
 
-	ans, err := testProd.GetPostLikes(ctx, &pb.Post{Id: 1})
+	ans, err := testProd.GetPostLikes(ctx, &pb.PostRequest{Id: 1})
 	//  var got = a
 	// fmt.Println(ans)
 	if err != nil {
@@ -204,7 +204,7 @@ func TestLikeOtherPost(t *testing.T) {
 	//prod1 := model.Product{Name: "Asus Zenbook 11", Description: "This Laptop is with Intel i7 12th gen processor and it has 120hz High refresh rate", Quantity: 100, Price: 88000, Image: "lap.jpg"}
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*3)
 	defer cancel()
-	pos := ser.Likes{}
+	pos := ser.Like{}
 	pos.PostID = 1
 	pos.LikerId = 2
 	mockProd.EXPECT().LikeOtherPostDbinteraction(pos).Return(nil)

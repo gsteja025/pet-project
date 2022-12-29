@@ -22,43 +22,46 @@ type User struct {
 	Bio         string
 	Experiences []Experience
 	Posts       []Post
+	connections []Connected
 }
 type Skill struct {
+	gorm.Model
 	Technology string
 	UserID     uint
 }
 
 type Experience struct {
-	ExperienceID uint `gorm:"AUTO_INCREMENT"`
-	Position     string
-	Company      string
-	From         time.Time
-	To           time.Time
-	Description  string
-	UserID       uint
+	gorm.Model
+	Position    string
+	Company     string
+	From        time.Time
+	To          time.Time
+	Description string
+	UserID      uint
 }
 
 type Post struct {
 	gorm.Model
 	Text     string
 	Comments []Comment
-	Like     []Likes
+	Likes    []Like
 	UserID   uint
 }
 
 type Comment struct {
-	CommentID   uint `gorm:"AUTO_INCREMENT"`
+	gorm.Model
 	Text        string
 	CommenterId uint
 	PostID      uint
 }
-type Likes struct {
-	LikesID uint `gorm:"AUTO_INCREMENT"`
+type Like struct {
+	gorm.Model
 	LikerId uint
 	PostID  uint
 }
 
 type Connected struct {
+	gorm.Model
 	User_1 uint
 	User_2 uint
 	Status string
@@ -82,62 +85,63 @@ func StartDB() {
 	}
 	defer db.Close()
 
-	db.DropTableIfExists(&User{})
-	db.CreateTable(&User{})
-	db.DropTableIfExists(&Experience{})
-	db.CreateTable(&Experience{})
-	db.DropTableIfExists(&Post{})
-	db.CreateTable(&Post{})
-	db.DropTableIfExists(&Comment{})
-	db.CreateTable(&Comment{})
-	db.DropTableIfExists(&Likes{})
-	db.CreateTable(&Likes{})
-	db.DropTableIfExists(&Connected{})
-	db.CreateTable(&Connected{})
-	db.DropTableIfExists(&Skill{})
-	db.CreateTable(&Skill{})
+	db.AutoMigrate(&User{})
+	db.AutoMigrate(&Experience{})
+	db.AutoMigrate(&Post{})
+	db.AutoMigrate(&Comment{})
+	db.AutoMigrate(&Like{})
+	db.AutoMigrate(&Connected{})
+	db.AutoMigrate(&Skill{})
 
-	user2 := User{
-		Name:    "AB",
-		Email:   "AB025@gmail.com",
-		Company: "BC",
-		Status:  "Active",
-		Experiences: []Experience{
-			{Position: "software dev", Company: "BC"},
-		},
-	}
+	db.Model(&Experience{}).AddForeignKey("user_id", "users(id)", "CASCADE", "RESTRICT")
+	db.Model(&Skill{}).AddForeignKey("user_id", "users(id)", "CASCADE", "RESTRICT")
+	db.Model(&Comment{}).AddForeignKey("post_id", "posts(id)", "CASCADE", "RESTRICT")
+	db.Model(&Like{}).AddForeignKey("post_id", "posts(id)", "CASCADE", "RESTRICT")
+	db.Model(&Connected{}).AddForeignKey("user_1", "users(id)", "CASCADE", "RESTRICT")
+	db.Model(&Connected{}).AddForeignKey("user_2", "users(id)", "CASCADE", "RESTRICT")
 
-	user1 := User{
-		Name:    "gst",
-		Email:   "suryagarimella@beautifulcode.in",
-		Company: "BC",
-		Status:  "Active",
-		Experiences: []Experience{
-			{Position: "software dev", Company: "BC"},
-		},
-		Skills: []Skill{
-			{Technology: "cpp"},
-		},
-		Posts: []Post{
-			{Text: "hello connections i've joined BC as dev intern"},
-		},
-	}
-	comment := Comment{
-		Text: "Congrats gst", CommenterId: 2, PostID: 1,
-	}
-	like := Likes{
-		LikerId: 2, PostID: 1,
-	}
-	conn := Connected{
-		User_1: 1,
-		User_2: 2,
-		Status: "pending",
-	}
+	// user2 := User{
+	// 	Name:    "AB",
+	// 	Email:   "AB025@gmail.com",
+	// 	Company: "BC",
+	// 	Status:  "Active",
+	// 	Experiences: []Experience{
+	// 		{Position: "software dev", Company: "BC"},
+	// 	},
+	// }
 
-	db.Save(&user1)
-	db.Save(&user2)
-	db.Save(&conn)
-	db.Save(&comment)
-	db.Save(&like)
+	// user1 := User{
+	// 	Name:    "gst",
+	// 	Email:   "suryagarimella@beautifulcode.in",
+	// 	Company: "BC",
+	// 	Status:  "Active",
+	// 	Experiences: []Experience{
+	// 		{Position: "software dev", Company: "BC"},
+	// 	},
+	// 	Skills: []Skill{
+	// 		{Technology: "cpp"},
+	// 	},
+	// 	Posts: []Post{
+	// 		{
+	// 			Text: "hello connections i've joined BC as dev intern",
+	// 			Comments: []Comment{
+	// 				{Text: "Congrats gst", CommenterId: 2, PostID: 1},
+	// 			},
+	// 			Likes: []Like{
+	// {LikerId: 2, PostID: 1},
+	// 			},
+	// 		},
+	// 	},
+	// 	connections: []Connected{
+	// 		{
+	// 			User_1: 1,
+	// 			User_2: 2,
+	// 			Status: "pending",
+	// 		},
+	// 	},
+	// }
+
+	// // db.Save(&user1)
+	// db.Save(&user2)
 
 }

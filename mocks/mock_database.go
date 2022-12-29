@@ -78,9 +78,12 @@ func (mr *MockDbinterfaceMockRecorder) ConnectWithOtherUserDbinteraction3(arg0 i
 }
 
 // CreateCommentDbInteraction mocks base method.
-func (m *MockDbinterface) CreateCommentDbInteraction(arg0 models.Comment) {
+func (m *MockDbinterface) CreateCommentDbInteraction(arg0 models.Comment) (models.Comment, error) {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CreateCommentDbInteraction", arg0)
+	ret := m.ctrl.Call(m, "CreateCommentDbInteraction", arg0)
+	ret0, _ := ret[0].(models.Comment)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // CreateCommentDbInteraction indicates an expected call of CreateCommentDbInteraction.
@@ -135,10 +138,10 @@ func (mr *MockDbinterfaceMockRecorder) GetPostCommentsDbinteraction(arg0 interfa
 }
 
 // GetPostLikesDbinteraction mocks base method.
-func (m *MockDbinterface) GetPostLikesDbinteraction(arg0 models.Post) ([]models.Likes, error) {
+func (m *MockDbinterface) GetPostLikesDbinteraction(arg0 models.Post) ([]models.Like, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetPostLikesDbinteraction", arg0)
-	ret0, _ := ret[0].([]models.Likes)
+	ret0, _ := ret[0].([]models.Like)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -150,7 +153,7 @@ func (mr *MockDbinterfaceMockRecorder) GetPostLikesDbinteraction(arg0 interface{
 }
 
 // LikeOtherPostDbinteraction mocks base method.
-func (m *MockDbinterface) LikeOtherPostDbinteraction(arg0 models.Likes) error {
+func (m *MockDbinterface) LikeOtherPostDbinteraction(arg0 models.Like) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "LikeOtherPostDbinteraction", arg0)
 	ret0, _ := ret[0].(error)

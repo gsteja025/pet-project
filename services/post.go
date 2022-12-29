@@ -4,8 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"sync"
-	"time"
 
 	"example.com/petproject/database"
 	ser "example.com/petproject/models"
@@ -22,13 +20,15 @@ func (s *Linkedinserver) Createpost(ctx context.Context, in *pb.NewPost) (*pb.Po
 	log.Printf("creating new post called")
 	newpos := ser.Post{
 		Text:   in.GetText(),
-		UserID: 1,
+		UserID: uint(in.UserID),
 	}
-	s.Db.CreatepostDbInteraction(newpos)
-	return &pb.Post{Text: in.GetText(), UserID: in.GetUserID()}, nil
+
+	ans, err := s.Db.CreatepostDbInteraction(newpos)
+
+	return &pb.Post{Id: uint64(ans.ID)}, err
 }
 
-func (s *Linkedinserver) GetPostComments(in *pb.Post, stream pb.LinkedinDatabaseCrud_GetPostCommentsServer) error {
+func (s *Linkedinserver) GetPostComments(in *pb.PostRequest, stream pb.LinkedinDatabaseCrud_GetPostCommentsServer) error {
 	log.Printf("Getting comments of post")
 	// Finalcomments := []*pb.Comment{}
 	pos := ser.Post{}
@@ -38,33 +38,26 @@ func (s *Linkedinserver) GetPostComments(in *pb.Post, stream pb.LinkedinDatabase
 	if err != nil {
 		fmt.Printf("Thers an error")
 	}
-	var wg sync.WaitGroup
 	// s.Db.Where("post_id = ?", in.GetId()).Find(&allcommen)
 	for _, conn := range comm {
-		wg.Add(1)
-		go func(conn ser.Comment) {
-			defer wg.Done()
-			time.Sleep(time.Duration(100) * time.Microsecond)
-			ele1 := pb.Comment{
-				Text:   conn.Text,
-				PostID: uint64(conn.PostID),
-			}
-			err := stream.Send(&ele1)
-			if err != nil {
-				fmt.Println("there is error in postcomments function")
-			}
-		}(conn)
+		ele1 := pb.Comment{
+			Text:   conn.Text,
+			PostID: uint64(conn.PostID),
+		}
+		err := stream.Send(&ele1)
+		if err != nil {
+			fmt.Println("there is error in postcomments function")
+		}
 
 		//Finalcomments = append(Finalcomments, &pb.Comment{Id: uint64(conn.CommentID), Text: conn.Text, Commenterid: uint64(conn.CommenterId)})
 	}
-	wg.Wait()
 
 	return nil
 }
 
-func (s *Linkedinserver) GetPostLikes(ctx context.Context, in *pb.Post) (*pb.Users, error) {
+func (s *Linkedinserver) GetPostLikes(ctx context.Context, in *pb.PostRequest) (*pb.Users, error) {
 	log.Printf("Getting likes of post")
-	allLikes := []ser.Likes{}
+	allLikes := []ser.Like{}
 	FinalLikes := []*pb.User{}
 	post := ser.Post{}
 	post.ID = uint(in.GetId())
@@ -75,17 +68,19 @@ func (s *Linkedinserver) GetPostLikes(ctx context.Context, in *pb.Post) (*pb.Use
 	for _, conn := range allLikes {
 		FinalLikes = append(FinalLikes, &pb.User{Id: uint64(conn.LikerId)})
 	}
-	return &pb.Users{Users: FinalLikes}, nil
+	return &pb.Users{Users: FinalLikes}, err
 }
 
-func (s *Linkedinserver) LikeOtherPost(ctx context.Context, in *pb.Request) (*pb.Emptyresponse, error) {
-	posts := ser.Likes{
+func (s *Linkedinserver) LikeOtherPost(ctx context.Context, in *pb.Request) (*pb.ConnectionResponse, error) {
+	posts := ser.Like{
 		PostID:  uint(in.GetPostID()),
 		LikerId: uint(in.LikerID),
 	}
+	var message string = "No error found"
 	err := s.Db.LikeOtherPostDbinteraction(posts)
 	if err != nil {
 		fmt.Printf("Thers an error")
+		message = "Error found"
 	}
-	return &pb.Emptyresponse{}, nil
+	return &pb.ConnectionResponse{Message: message}, err
 }

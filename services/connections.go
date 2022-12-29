@@ -2,10 +2,10 @@ package services
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"reflect"
 
-	Email "example.com/petproject/Email"
 	ser "example.com/petproject/models"
 	pb "example.com/petproject/protos"
 	_ "github.com/lib/pq"
@@ -14,7 +14,6 @@ import (
 func (s Linkedinserver) GetConnectedUsers(ctx context.Context, in *pb.User) (*pb.Users, error) {
 	log.Printf("Connected users")
 	connects := []ser.Connected{}
-	connects1 := []ser.Connected{}
 	Finalconnects := []*pb.User{}
 	// str1 := "Connected"
 	connects, err := s.Db.GetConnectedUsersDbInteraction(ser.Connected{User_1: uint(in.GetId())})
@@ -23,23 +22,24 @@ func (s Linkedinserver) GetConnectedUsers(ctx context.Context, in *pb.User) (*pb
 		panic(err.Error())
 	}
 	for _, conn := range connects {
-		Finalconnects = append(Finalconnects, &pb.User{Id: uint64(conn.User_2)})
+		if conn.User_1 == uint(in.GetId()) {
+			Finalconnects = append(Finalconnects, &pb.User{Id: uint64(conn.User_2)})
+		} else {
+			Finalconnects = append(Finalconnects, &pb.User{Id: uint64(conn.User_1)})
+		}
 	}
 
-	for _, conn := range connects1 {
-		Finalconnects = append(Finalconnects, &pb.User{Id: uint64(conn.User_1)})
-	}
 	return &pb.Users{Users: Finalconnects}, nil
 
 }
 
-func (s *Linkedinserver) ConnectWithOtherUser(ctx context.Context, in *pb.ConnectionRequest) (*pb.Emptyresponse, error) {
+func (s *Linkedinserver) ConnectWithOtherUser(ctx context.Context, in *pb.ConnectionRequest) (*pb.ConnectionResponse, error) {
 	log.Printf("YOU NOW HAVE A NEW CONNECTION")
 	// var allconnectsids []uint64
 	// cnt := 0
 	var conn ser.Connected
 	conn1 := conn
-	usermodel := ser.User{}
+	// usermodel := ser.User{}
 	Userslice := []ser.User{}
 	user1 := ser.User{}
 	user2 := ser.User{}
@@ -48,15 +48,22 @@ func (s *Linkedinserver) ConnectWithOtherUser(ctx context.Context, in *pb.Connec
 	Userslice = append(Userslice, user1)
 	Userslice = append(Userslice, user2)
 	conn, err := s.Db.ConnectWithOtherUserDbinteraction1(Userslice)
+	fmt.Println(conn)
 	if err != nil {
 		panic(err.Error())
 	}
+	var message string = "pending"
 	if !reflect.DeepEqual(conn, conn1) && conn.Status == "pending" {
-		s.Db.ConnectWithOtherUserDbinteraction2(Userslice)
-		Email.SendEmail(usermodel.Email)
 
+		s.Db.ConnectWithOtherUserDbinteraction2(Userslice)
+		// Email.SendEmail(usermodel.Email)
+		message = "Connected"
+
+	} else if !reflect.DeepEqual(conn, conn1) && conn.Status == "Connected" {
+		message = "Connected"
 	} else {
 		s.Db.ConnectWithOtherUserDbinteraction3(Userslice)
 	}
-	return &pb.Emptyresponse{}, nil
+	fmt.Println(message)
+	return &pb.ConnectionResponse{Message: message}, nil
 }

@@ -2,6 +2,8 @@ package services
 
 import (
 	"context"
+	"log"
+	"reflect"
 	"testing"
 	"time"
 
@@ -22,10 +24,22 @@ func TestCreateComment(t *testing.T) {
 	//prod1 := model.Product{Name: "Asus Zenbook 11", Description: "This Laptop is with Intel i7 12th gen processor and it has 120hz High refresh rate", Quantity: 100, Price: 88000, Image: "lap.jpg"}
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	mockProd.EXPECT().CreateCommentDbInteraction(models.Comment{Text: "this is gst", CommenterId: 2, PostID: 1}).Times(1)
+	mockProd.EXPECT().CreateCommentDbInteraction(models.Comment{Text: "this is gst", CommenterId: 2, PostID: 1}).Return(models.Comment{Text: "this is gst", CommenterId: 2, PostID: 1}, nil).Times(1)
 	//rr := httptest.NewRecorder()
 
-	testProd.CreateComment(ctx, &pb.Comment{Text: "this is gst", Commenterid: 2, PostID: 1})
+	comm, err := testProd.CreateComment(ctx, &pb.NewComment{Text: "this is gst", Commenterid: 2, PostID: 1})
+	if err != nil {
+		log.Println("Error in TestCreateComment")
+	}
+	got := &comm
+	expected := pb.Comment{
+		Text: "this is gst", Commenterid: 2, PostID: 1,
+	}
+
+	if !reflect.DeepEqual(got, expected) {
+		t.Errorf("handler returned unexpected body: got %v want %v",
+			got, expected)
+	}
 
 	// Checking status code
 	// if status := rr.Code; status != http.StatusOK {
