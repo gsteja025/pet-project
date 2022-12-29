@@ -100,48 +100,58 @@ func StartDB() {
 	db.Model(&Connected{}).AddForeignKey("user_1", "users(id)", "CASCADE", "RESTRICT")
 	db.Model(&Connected{}).AddForeignKey("user_2", "users(id)", "CASCADE", "RESTRICT")
 
-	// user2 := User{
-	// 	Name:    "AB",
-	// 	Email:   "AB025@gmail.com",
-	// 	Company: "BC",
-	// 	Status:  "Active",
-	// 	Experiences: []Experience{
-	// 		{Position: "software dev", Company: "BC"},
-	// 	},
-	// }
+	user2 := User{
+		Name:    "AB",
+		Email:   "AB025@gmail.com",
+		Company: "BC",
+		Status:  "Active",
+		Experiences: []Experience{
+			{Position: "software dev", Company: "BC"},
+		},
+	}
+	user3 := User{
+		Name:    "Teja",
+		Email:   "AB025@gmail.com",
+		Company: "BC",
+		Status:  "Active",
+		Experiences: []Experience{
+			{Position: "software dev", Company: "BC"},
+		},
+	}
 
-	// user1 := User{
-	// 	Name:    "gst",
-	// 	Email:   "suryagarimella@beautifulcode.in",
-	// 	Company: "BC",
-	// 	Status:  "Active",
-	// 	Experiences: []Experience{
-	// 		{Position: "software dev", Company: "BC"},
-	// 	},
-	// 	Skills: []Skill{
-	// 		{Technology: "cpp"},
-	// 	},
-	// 	Posts: []Post{
-	// 		{
-	// 			Text: "hello connections i've joined BC as dev intern",
-	// 			Comments: []Comment{
-	// 				{Text: "Congrats gst", CommenterId: 2, PostID: 1},
-	// 			},
-	// 			Likes: []Like{
-	// {LikerId: 2, PostID: 1},
-	// 			},
-	// 		},
-	// 	},
-	// 	connections: []Connected{
-	// 		{
-	// 			User_1: 1,
-	// 			User_2: 2,
-	// 			Status: "pending",
-	// 		},
-	// 	},
-	// }
+	user1 := User{
+		Name:    "gst",
+		Email:   "suryagarimella@beautifulcode.in",
+		Company: "BC",
+		Status:  "Active",
+		Experiences: []Experience{
+			{Position: "software dev", Company: "BC"},
+		},
+		Skills: []Skill{
+			{Technology: "cpp"},
+		},
+		Posts: []Post{
+			{
+				Text: "hello connections i've joined BC as dev intern",
+				Comments: []Comment{
+					{Text: "Congrats gst", CommenterId: 2, PostID: 1},
+				},
+				Likes: []Like{
+					{LikerId: 2, PostID: 1},
+				},
+			},
+		},
+		connections: []Connected{
+			{
+				User_1: 1,
+				User_2: 2,
+				Status: "pending",
+			},
+		},
+	}
 
-	// // db.Save(&user1)
-	// db.Save(&user2)
+	db.Save(&user1)
+	db.Save(&user2)
+	db.Save(&user3)
 
 }

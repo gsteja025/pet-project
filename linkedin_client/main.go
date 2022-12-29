@@ -27,10 +27,10 @@ func main() {
 	defer cancel()
 	// As a User I should be able to create posts
 
-	new_post, err := client.Createpost(ctx, &pb.NewPost{Text: "we're hiring for software dev role", UserID: 1})
-	checkerror(err)
+	// new_post, err := client.Createpost(ctx, &pb.NewPost{Text: "we're hiring for software dev role", UserID: 1})
+	// checkerror(err)
 
-	log.Printf("Post text: %v", new_post.GetText())
+	// log.Printf("Post text: %v", new_post.GetText())
 
 	// As a User I should be able to  see other connected users
 
@@ -43,40 +43,43 @@ func main() {
 	// 	fmt.Println(comm.GetText())
 	// }
 
-	likes, err3 := client.GetPostLikes(ctx, &pb.PostRequest{Id: 1})
-	checkerror(err3)
-	log.Printf("These are likes of your posts")
-	for _, comm := range likes.Users {
-		fmt.Println(comm.GetId())
-	}
+	// likes, err3 := client.GetPostLikes(ctx, &pb.PostRequest{Id: 1})
+	// checkerror(err3)
+	// log.Printf("These are likes of your posts")
+	// for _, comm := range likes.Users {
+	// 	fmt.Println(comm.GetId())
+	// }
 
-	jobs, err4 := client.ConnectWithOtherUser(ctx, &pb.ConnectionRequest{
-		Id1: 2,
-		Id2: 1,
-	})
-	checkerror(err4)
-	fmt.Println(jobs)
+	// jobs, err4 := client.ConnectWithOtherUser(ctx, &pb.ConnectionRequest{
+	// 	Id1: 1,
+	// 	Id2: 4,
+	// })
+	// checkerror(err4)
+	// fmt.Println(jobs)
 
-	connected_users, err5 := client.GetConnectedUsers(ctx, &pb.User{Id: 1, Name: "gst"})
-	checkerror(err5)
-	log.Printf("These are your connected users")
-	for _, user := range connected_users.Users {
-		fmt.Println(user.GetId())
-	}
+	token, err := client.CreateToken(ctx, &pb.User{Name: "gst", Email: "gsteja025@gmail.com"})
+	checkerror(err)
+	fmt.Println(token)
+	// connected_users, err5 := client.GetConnectedUsers(ctx, &pb.User{Id: 1, Name: "gst"})
+	// checkerror(err5)
+	// log.Printf("These are your connected users")
+	// for _, user := range connected_users.Users {
+	// 	fmt.Println(user.GetId())
+	// }
 
-	like, err6 := client.LikeOtherPost(ctx, &pb.Request{PostID: 1, LikerID: 2})
-	checkerror(err6)
-	fmt.Println(like)
+	// like, err6 := client.LikeOtherPost(ctx, &pb.Request{PostID: 1, LikerID: 2})
+	// checkerror(err6)
+	// fmt.Println(like)
 
-	us1, err7 := client.SearchUser(ctx, &pb.SearchRequest{Tech: *pb.SearchRequest_CPP.Enum()})
-	checkerror(err7)
-	log.Printf("These are your relevant searches")
-	fmt.Println(us1)
+	// us1, err7 := client.SearchUser(ctx, &pb.SearchRequest{Tech: *pb.SearchRequest_CPP.Enum()})
+	// checkerror(err7)
+	// log.Printf("These are your relevant searches")
+	// fmt.Println(us1)
 
-	new_comment, err8 := client.CreateComment(ctx, &pb.NewComment{Text: "Great news", Commenterid: 1, PostID: 1})
-	checkerror(err8)
+	// new_comment, err8 := client.CreateComment(ctx, &pb.NewComment{Text: "Great news", Commenterid: 1, PostID: 1})
+	// checkerror(err8)
 
-	log.Printf("Comment text: %v", new_comment.GetText())
+	// log.Printf("Comment text: %v", new_comment.GetText())
 
 	//get details of all employees
 	// AllEmployees, err := client.GetEmployees(ctx, &pb.EmptyEmployee{})

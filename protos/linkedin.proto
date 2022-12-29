@@ -13,7 +13,8 @@ service LinkedinDatabaseCrud {
     rpc LikeOtherPost(Request) returns (ConnectionResponse) {}
     rpc SearchUser(SearchRequest) returns (Users) {}
     rpc CreateComment(NewComment) returns (Comment) {}
-    
+    rpc CreateToken(User) returns (Token) {}
+
 }
 
 
@@ -23,6 +24,13 @@ message NewPost{
     uint64 UserID = 2;
 }
 
+message Token {
+    string Token = 1;
+}
+message NewUser{
+    string Name = 1;
+    string Email = 2;
+}
 message ConnectionResponse {
     uint64 Status= 1;
     string message = 2;

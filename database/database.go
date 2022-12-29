@@ -12,9 +12,7 @@ type Dbclient struct {
 type Dbinterface interface {
 	CreateCommentDbInteraction(model.Comment) (model.Comment, error)
 	GetConnectedUsersDbInteraction(model.Connected) ([]model.Connected, error)
-	ConnectWithOtherUserDbinteraction1([]model.User) (model.Connected, error)
-	ConnectWithOtherUserDbinteraction2([]model.User) error
-	ConnectWithOtherUserDbinteraction3([]model.User) error
+	ConnectWithOtherUser([]model.User) (model.Connected, error)
 	CreatepostDbInteraction(model.Post) (model.Post, error)
 	GetPostCommentsDbinteraction(model.Post) ([]model.Comment, error)
 	GetPostLikesDbinteraction(model.Post) ([]model.Like, error)
@@ -37,23 +35,30 @@ func (s Dbclient) GetConnectedUsersDbInteraction(conn model.Connected) ([]model.
 	}
 	return result, Db.Error
 }
-func (s Dbclient) ConnectWithOtherUserDbinteraction1(user []model.User) (model.Connected, error) {
-	var conn model.Connected
-	Db := s.Db.Where("user_1 = ? and user_2 = ?", user[1].ID, user[0].ID).Find(&conn)
-	return conn, Db.Error
-}
+func (s Dbclient) ConnectWithOtherUser(user []model.User) (model.Connected, error) {
 
-func (s Dbclient) ConnectWithOtherUserDbinteraction2(user []model.User) error {
+	Response := model.Connected{}
 
-	Db := s.Db.Save(&model.Connected{User_1: uint(user[1].ID), User_2: uint(user[0].ID), Status: "Connected"})
-	return Db.Error
+	Db := s.Db.Where("(user_1=? and user_2=?) or (user_1=? and user_2=?)", user[0].ID, user[1].ID, user[1].ID, user[0].ID).Find(&Response)
 
-}
+	if Db.Error != nil {
+		// insert into table with pending as status
+		Response.User_1 = user[0].ID
+		Response.User_2 = user[1].ID
+		Response.Status = "pending"
+		Db.Error = nil
+	} else {
+		if Response.Status == "connected" {
+			return Response, Db.Error
+		}
 
-func (s Dbclient) ConnectWithOtherUserDbinteraction3(user []model.User) error {
-
-	Db := s.Db.Save(&model.Connected{User_1: uint(user[0].ID), User_2: uint(user[1].ID), Status: "Pending"})
-	return Db.Error
+		if Response.Status == "pending" {
+			// convert to connected
+			Response.Status = "connected"
+		}
+	}
+	s.Db.Save(&Response)
+	return Response, Db.Error
 }
 
 func (s Dbclient) CreatepostDbInteraction(post model.Post) (model.Post, error) {

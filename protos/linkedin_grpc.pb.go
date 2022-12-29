@@ -30,6 +30,7 @@ type LinkedinDatabaseCrudClient interface {
 	LikeOtherPost(ctx context.Context, in *Request, opts ...grpc.CallOption) (*ConnectionResponse, error)
 	SearchUser(ctx context.Context, in *SearchRequest, opts ...grpc.CallOption) (*Users, error)
 	CreateComment(ctx context.Context, in *NewComment, opts ...grpc.CallOption) (*Comment, error)
+	CreateToken(ctx context.Context, in *User, opts ...grpc.CallOption) (*Token, error)
 }
 
 type linkedinDatabaseCrudClient struct {
@@ -135,6 +136,15 @@ func (c *linkedinDatabaseCrudClient) CreateComment(ctx context.Context, in *NewC
 	return out, nil
 }
 
+func (c *linkedinDatabaseCrudClient) CreateToken(ctx context.Context, in *User, opts ...grpc.CallOption) (*Token, error) {
+	out := new(Token)
+	err := c.cc.Invoke(ctx, "/petproject.LinkedinDatabaseCrud/CreateToken", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // LinkedinDatabaseCrudServer is the server API for LinkedinDatabaseCrud service.
 // All implementations must embed UnimplementedLinkedinDatabaseCrudServer
 // for forward compatibility
@@ -147,6 +157,7 @@ type LinkedinDatabaseCrudServer interface {
 	LikeOtherPost(context.Context, *Request) (*ConnectionResponse, error)
 	SearchUser(context.Context, *SearchRequest) (*Users, error)
 	CreateComment(context.Context, *NewComment) (*Comment, error)
+	CreateToken(context.Context, *User) (*Token, error)
 	mustEmbedUnimplementedLinkedinDatabaseCrudServer()
 }
 
@@ -177,6 +188,9 @@ func (UnimplementedLinkedinDatabaseCrudServer) SearchUser(context.Context, *Sear
 }
 func (UnimplementedLinkedinDatabaseCrudServer) CreateComment(context.Context, *NewComment) (*Comment, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateComment not implemented")
+}
+func (UnimplementedLinkedinDatabaseCrudServer) CreateToken(context.Context, *User) (*Token, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateToken not implemented")
 }
 func (UnimplementedLinkedinDatabaseCrudServer) mustEmbedUnimplementedLinkedinDatabaseCrudServer() {}
 
@@ -338,6 +352,24 @@ func _LinkedinDatabaseCrud_CreateComment_Handler(srv interface{}, ctx context.Co
 	return interceptor(ctx, in, info, handler)
 }
 
+func _LinkedinDatabaseCrud_CreateToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(User)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LinkedinDatabaseCrudServer).CreateToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/petproject.LinkedinDatabaseCrud/CreateToken",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LinkedinDatabaseCrudServer).CreateToken(ctx, req.(*User))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // LinkedinDatabaseCrud_ServiceDesc is the grpc.ServiceDesc for LinkedinDatabaseCrud service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -372,6 +404,10 @@ var LinkedinDatabaseCrud_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateComment",
 			Handler:    _LinkedinDatabaseCrud_CreateComment_Handler,
+		},
+		{
+			MethodName: "CreateToken",
+			Handler:    _LinkedinDatabaseCrud_CreateToken_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

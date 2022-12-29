@@ -34,47 +34,19 @@ func (m *MockDbinterface) EXPECT() *MockDbinterfaceMockRecorder {
 	return m.recorder
 }
 
-// ConnectWithOtherUserDbinteraction1 mocks base method.
-func (m *MockDbinterface) ConnectWithOtherUserDbinteraction1(arg0 []models.User) (models.Connected, error) {
+// ConnectWithOtherUser mocks base method.
+func (m *MockDbinterface) ConnectWithOtherUser(arg0 []models.User) (models.Connected, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ConnectWithOtherUserDbinteraction1", arg0)
+	ret := m.ctrl.Call(m, "ConnectWithOtherUser", arg0)
 	ret0, _ := ret[0].(models.Connected)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// ConnectWithOtherUserDbinteraction1 indicates an expected call of ConnectWithOtherUserDbinteraction1.
-func (mr *MockDbinterfaceMockRecorder) ConnectWithOtherUserDbinteraction1(arg0 interface{}) *gomock.Call {
+// ConnectWithOtherUser indicates an expected call of ConnectWithOtherUser.
+func (mr *MockDbinterfaceMockRecorder) ConnectWithOtherUser(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ConnectWithOtherUserDbinteraction1", reflect.TypeOf((*MockDbinterface)(nil).ConnectWithOtherUserDbinteraction1), arg0)
-}
-
-// ConnectWithOtherUserDbinteraction2 mocks base method.
-func (m *MockDbinterface) ConnectWithOtherUserDbinteraction2(arg0 []models.User) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ConnectWithOtherUserDbinteraction2", arg0)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// ConnectWithOtherUserDbinteraction2 indicates an expected call of ConnectWithOtherUserDbinteraction2.
-func (mr *MockDbinterfaceMockRecorder) ConnectWithOtherUserDbinteraction2(arg0 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ConnectWithOtherUserDbinteraction2", reflect.TypeOf((*MockDbinterface)(nil).ConnectWithOtherUserDbinteraction2), arg0)
-}
-
-// ConnectWithOtherUserDbinteraction3 mocks base method.
-func (m *MockDbinterface) ConnectWithOtherUserDbinteraction3(arg0 []models.User) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ConnectWithOtherUserDbinteraction3", arg0)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// ConnectWithOtherUserDbinteraction3 indicates an expected call of ConnectWithOtherUserDbinteraction3.
-func (mr *MockDbinterfaceMockRecorder) ConnectWithOtherUserDbinteraction3(arg0 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ConnectWithOtherUserDbinteraction3", reflect.TypeOf((*MockDbinterface)(nil).ConnectWithOtherUserDbinteraction3), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ConnectWithOtherUser", reflect.TypeOf((*MockDbinterface)(nil).ConnectWithOtherUser), arg0)
 }
 
 // CreateCommentDbInteraction mocks base method.
