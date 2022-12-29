@@ -25,5 +25,5 @@ func (S *Linkedinserver) SearchUser(ctx context.Context, in *pb.SearchRequest) (
 	for _, ele := range Allskills {
 		Allusers = append(Allusers, &pb.User{Id: uint64(ele.UserID)})
 	}
-	return &pb.Users{Users: Allusers}, nil
+	return &pb.Users{Users: Allusers}, err
 }

@@ -7,14 +7,15 @@ package petproject;
 service LinkedinDatabaseCrud {
     rpc Createpost(NewPost) returns (Post) {} 
     rpc GetConnectedUsers(User) returns (Users) {}
-    rpc GetPostComments(Post) returns (Comments) {}
-    rpc GetPostLikes(Post) returns (Users) {}
-    rpc ConnectWithOtherUser(ConnectionRequest) returns (Emptyresponse) {}
-    rpc LikeOtherPost(Request) returns (Emptyresponse) {}
+    rpc GetPostComments(PostRequest) returns (stream Comment) {}
+    rpc GetPostLikes(PostRequest) returns (Users) {}
+    rpc ConnectWithOtherUser(ConnectionRequest) returns (ConnectionResponse) {}
+    rpc LikeOtherPost(Request) returns (ConnectionResponse) {}
     rpc SearchUser(SearchRequest) returns (Users) {}
-    rpc CreateComment(Comment) returns (Comment) {}
+    rpc CreateComment(NewComment) returns (Comment) {}
     
 }
+
 
 
 message NewPost{
@@ -22,12 +23,19 @@ message NewPost{
     uint64 UserID = 2;
 }
 
+message ConnectionResponse {
+    uint64 Status= 1;
+    string message = 2;
+}
 message Post {
     uint64 id =  1;
     string Text = 2;
-    uint64 UserID = 3;
+    uint64 UserID =3 ;
 }
 
+message PostRequest{
+    uint64 id =  1;
+}
 message User {
     uint64 id = 1;
     string Name = 2;
@@ -70,4 +78,9 @@ message Request {
     uint64 LikerID = 2;
 }
 
+message NewComment {
+    string Text = 2;
+    uint64 Commenterid = 3;
+    uint64 PostID = 4;
+}
 
