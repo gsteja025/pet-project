@@ -27,8 +27,8 @@ func TestCreateComment(t *testing.T) {
 	mockProd.EXPECT().CreateCommentDbInteraction(models.Comment{Text: "this is gst", CommenterId: 2, PostID: 1}).Return(models.Comment{Text: "this is gst", CommenterId: 2, PostID: 1}, nil).Times(1)
 	//rr := httptest.NewRecorder()
 
-	comm, err9 := testProd.CreateComment(ctx, &pb.NewComment{Text: "this is gst", Commenterid: 2, PostID: 1})
-	if err9 != nil {
+	comm, err := testProd.CreateComment(ctx, &pb.NewComment{Text: "this is gst", Commenterid: 2, PostID: 1})
+	if err != nil {
 		log.Println("Error in TestCreateComment")
 	}
 	got := &comm
