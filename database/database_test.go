@@ -33,14 +33,16 @@ func TestCreatepostDbInteraction(t *testing.T) {
 		Db: db,
 	}
 	mock.ExpectBegin()
-	mock.ExpectQuery(`INSERT INTO "posts" (.+)`).WillReturnRows(
-		sqlmock.NewRows([]string{"id"}).AddRow(1),
-	).WillReturnError(err)
+	rows := sqlmock.NewRows([]string{"id"}).AddRow(1)
+	mock.ExpectQuery(`INSERT INTO "posts" (.+)`).WillReturnRows(rows)
 	mock.ExpectCommit()
 	post, err := mockClient.CreatepostDbInteraction(model.Post{})
 	fmt.Println(post)
 	if post.ID != 1 || err != nil {
 		t.Errorf("failed to create user")
+	}
+	if err := mock.ExpectationsWereMet(); err != nil {
+		t.Errorf("there were unfulfilled expectations: %s", err)
 	}
 
 }

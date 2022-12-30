@@ -42,8 +42,5 @@ func (s *Linkedinserver) ConnectWithOtherUser(ctx context.Context, in *pb.Connec
 	user2.ID = uint(in.GetId2())
 	var Userslice = []ser.User{user1, user2}
 	conn, err := s.Db.ConnectWithOtherUser(Userslice)
-	if err != nil {
-		panic(err.Error())
-	}
-	return &pb.ConnectionResponse{Message: conn.Status}, nil
+	return &pb.ConnectionResponse{Message: conn.Status}, err
 }

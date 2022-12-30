@@ -36,7 +36,7 @@ func (s *Linkedinserver) GetPostComments(in *pb.PostRequest, stream pb.LinkedinD
 	comm, err := s.Db.GetPostCommentsDbinteraction(pos)
 
 	if err != nil {
-		fmt.Printf("Thers an error")
+		fmt.Printf("There an error")
 	}
 	// s.Db.Where("post_id = ?", in.GetId()).Find(&allcommen)
 	for _, conn := range comm {
