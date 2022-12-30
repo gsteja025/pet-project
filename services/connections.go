@@ -2,9 +2,7 @@ package services
 
 import (
 	"context"
-	"fmt"
 	"log"
-	"reflect"
 
 	ser "example.com/petproject/models"
 	pb "example.com/petproject/protos"
@@ -37,33 +35,12 @@ func (s *Linkedinserver) ConnectWithOtherUser(ctx context.Context, in *pb.Connec
 	log.Printf("YOU NOW HAVE A NEW CONNECTION")
 	// var allconnectsids []uint64
 	// cnt := 0
-	var conn ser.Connected
-	conn1 := conn
 	// usermodel := ser.User{}
-	Userslice := []ser.User{}
 	user1 := ser.User{}
 	user2 := ser.User{}
 	user1.ID = uint(in.GetId1())
 	user2.ID = uint(in.GetId2())
-	Userslice = append(Userslice, user1)
-	Userslice = append(Userslice, user2)
-	conn, err := s.Db.ConnectWithOtherUserDbinteraction1(Userslice)
-	fmt.Println(conn)
-	if err != nil {
-		panic(err.Error())
-	}
-	var message string = "pending"
-	if !reflect.DeepEqual(conn, conn1) && conn.Status == "pending" {
-
-		s.Db.ConnectWithOtherUserDbinteraction2(Userslice)
-		// Email.SendEmail(usermodel.Email)
-		message = "Connected"
-
-	} else if !reflect.DeepEqual(conn, conn1) && conn.Status == "Connected" {
-		message = "Connected"
-	} else {
-		s.Db.ConnectWithOtherUserDbinteraction3(Userslice)
-	}
-	fmt.Println(message)
-	return &pb.ConnectionResponse{Message: message}, nil
+	var Userslice = []ser.User{user1, user2}
+	conn, err := s.Db.ConnectWithOtherUser(Userslice)
+	return &pb.ConnectionResponse{Message: conn.Status}, err
 }

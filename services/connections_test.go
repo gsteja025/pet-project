@@ -3,13 +3,13 @@ package services
 import (
 	"context"
 	"fmt"
+	"log"
 	"reflect"
 	"testing"
 	"time"
 
 	mocks "example.com/petproject/mocks"
 	models "example.com/petproject/models"
-	ser "example.com/petproject/models"
 	pb "example.com/petproject/protos"
 	"github.com/golang/mock/gomock"
 )
@@ -73,8 +73,6 @@ func TestConnectWithOtherUser(t *testing.T) {
 
 	mockProd := mocks.NewMockDbinterface(mockcntrl)
 
-	var conn ser.Connected
-	conn1 := conn
 	//prod1 := model.Product{Name: "Asus Zenbook 11", Description: "This Laptop is with Intel i7 12th gen processor and it has 120hz High refresh rate", Quantity: 100, Price: 88000, Image: "lap.jpg"}
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
@@ -82,42 +80,26 @@ func TestConnectWithOtherUser(t *testing.T) {
 	testProd := Linkedinserver{Db: mockProd}
 
 	for _, test := range tests {
-		Userslice := []models.User{}
+
 		user1 := models.User{}
 		user2 := models.User{}
 		user1.ID = uint(test.request.Id1)
 		user2.ID = uint(test.request.Id2)
-		Userslice = append(Userslice, user1)
-		Userslice = append(Userslice, user2)
-		required1 := models.Connected{
+		var Userslice = []models.User{user1, user2}
+		response := models.Connected{
 			User_1: user1.ID,
 			User_2: user2.ID,
 			Status: test.expected.Message,
 		}
-		if test.expected.Message == "pending" {
-			required1 = models.Connected{}
-		}
-		if test.expected.Message == "Connected" {
-			required1.Status = "pending"
-		}
-
-		mockProd.EXPECT().ConnectWithOtherUserDbinteraction1(Userslice).Return(required1, nil)
-
-		if !reflect.DeepEqual(required1, conn1) && required1.Status == "pending" {
-			mockProd.EXPECT().ConnectWithOtherUserDbinteraction2(Userslice).Return(nil)
-		} else if !reflect.DeepEqual(required1, conn1) && required1.Status == "Connected" {
-
-		} else {
-			mockProd.EXPECT().ConnectWithOtherUserDbinteraction3(Userslice).Return(nil)
-		}
-
+		mockProd.EXPECT().ConnectWithOtherUser(Userslice).Return(response, nil)
 		got, err := testProd.ConnectWithOtherUser(ctx, test.request)
-		fmt.Println(got.Message, test.expected.Message)
 		if err != nil {
-			t.Errorf("Unexpected error: %v", err)
+			log.Println("Error found in line 91")
 		}
-		if got.Message != test.expected.Message {
-			t.Errorf("expected %v got %v", got, test.expected)
+
+		expected := test.expected
+		if !reflect.DeepEqual(got, expected) {
+			t.Errorf("got %v expected %v", got, expected)
 		}
 
 	}
