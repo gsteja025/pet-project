@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net"
+	"os"
 
 	database "example.com/petproject/database"
 	mod "example.com/petproject/models"
@@ -14,19 +16,22 @@ import (
 )
 
 const (
-	port = ":50051" // choosing port number
+	port = ":54321" // choosing port number
 )
 
 func main() {
 
 	mod.StartDB()
+	fmt.Println("inside main.go")
 	listen, err := net.Listen("tcp", port)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 
 	//db connection
-	db, err := gorm.Open("postgres", "user=postgres password=root dbname=postgres sslmode=disable")
+	url := os.Getenv("DATABASE_URL")
+
+	db, err := gorm.Open("postgres", url)
 	if err != nil {
 		panic(err.Error())
 	}

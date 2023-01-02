@@ -70,16 +70,16 @@ type Connected struct {
 func StartDB() {
 
 	envErr := godotenv.Load(".env")
+	fmt.Println("inside models.go, startdb")
 	//fmt.Println(envErr)
 	if envErr != nil {
 		fmt.Printf("Could not load .env file")
 		os.Exit(1)
 	}
-	db_user := os.Getenv("db_user")
-	db_password := os.Getenv("db_password")
-	db_name := os.Getenv("db_name")
-	conn1 := "user=" + db_user + " password=" + db_password + " dbname=" + db_name + " sslmode=disable"
-	db, err := gorm.Open("postgres", conn1)
+	url := os.Getenv("DATABASE_URL")
+	fmt.Println(url)
+	// conn1 := "user=" + db_user + " password=" + db_password + " dbname=" + db_name + " sslmode=disable"
+	db, err := gorm.Open("postgres", url)
 	if err != nil {
 		panic(err.Error())
 	}
