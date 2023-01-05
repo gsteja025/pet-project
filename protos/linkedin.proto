@@ -17,7 +17,14 @@ service LinkedinDatabaseCrud {
 
 }
 
-
+message SearchRequest{
+    enum TechStack {
+        CPP = 0;
+        JAVA = 1;
+    
+    }
+    TechStack tech = 3;
+}
 
 message NewPost{
     string Text = 1;
@@ -72,14 +79,7 @@ message ConnectionRequest {
     uint64 id2 = 2;
 }
 
-message SearchRequest{
-    enum TechStack {
-        CPP = 0;
-        JAVA = 1;
-    
-    }
-    TechStack tech = 3;
-}
+
 
 message Request {
     uint64 PostID = 1;
