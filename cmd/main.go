@@ -27,10 +27,10 @@ func main() {
 	if err != nil {
 		log.Fatal(err.Error())
 	}
-
 	//db connection
-	url := os.Getenv("DATABASE_URL")
 
+	// url := "postgres://gst:qjTFHMfsSCasGESrJEvpou0oK4bVMvua@dpg-cep7pccgqg4ekmffv1vg-a.oregon-postgres.render.com/linkedin"
+	url := os.Getenv("DATABASE_URL")
 	db, err := gorm.Open("postgres", url)
 	if err != nil {
 		panic(err.Error())

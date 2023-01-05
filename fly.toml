@@ -1,6 +1,6 @@
-# fly.toml file generated for linkedin-gst on 2023-01-02T12:02:33+05:30
+# fly.toml file generated for jwdkcf on 2023-01-04T11:30:51+05:30
 
-app = "linkedin-gst"
+app = "jwdkcf"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = []
@@ -10,7 +10,8 @@ processes = []
   buildpacks = ["gcr.io/paketo-buildpacks/go"]
 
 [env]
-  PORT = "8080"
+  PORT = "54321"
+  DATABASE_URL = "postgres://gst:qjTFHMfsSCasGESrJEvpou0oK4bVMvua@dpg-cep7pccgqg4ekmffv1vg-a.oregon-postgres.render.com/linkedin"
 
 [experimental]
   allowed_public_ports = []
@@ -27,11 +28,12 @@ processes = []
     soft_limit = 20
     type = "connections"
 
+
   [[services.ports]]
     handlers = ["tls"]
     port = 443
-    [services.ports.tls_options]
-      alpn = ["h2"]
+  [services.ports.tls_options]
+    alpn = ["h2"]
 
   [[services.tcp_checks]]
     grace_period = "1s"

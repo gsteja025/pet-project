@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/jinzhu/gorm"
-	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
 
@@ -69,17 +68,19 @@ type Connected struct {
 
 func StartDB() {
 
-	envErr := godotenv.Load(".env")
+	// envErr := godotenv.Load(".env")
 	fmt.Println("inside models.go, startdb")
-	//fmt.Println(envErr)
-	if envErr != nil {
-		fmt.Printf("Could not load .env file")
-		os.Exit(1)
-	}
+	// fmt.Println(envErr)
+	// if envErr != nil {
+	// 	fmt.Printf("Could not load .env file")
+	// 	os.Exit(1)
+	// }
+	// url := "postgres://gst:qjTFHMfsSCasGESrJEvpou0oK4bVMvua@dpg-cep7pccgqg4ekmffv1vg-a.oregon-postgres.render.com/linkedin"
+	// fmt.Println(url)
 	url := os.Getenv("DATABASE_URL")
-	fmt.Println(url)
-	// conn1 := "user=" + db_user + " password=" + db_password + " dbname=" + db_name + " sslmode=disable"
+	// conn1 := "user=" + db_u + " password=" + db_password + " dbname=" + db_name + " sslmode=disable"
 	db, err := gorm.Open("postgres", url)
+	fmt.Println(url)
 	if err != nil {
 		panic(err.Error())
 	}
